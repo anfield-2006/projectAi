@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#102c4b" />
+  <meta name="description" content="ค้นหาและเปรียบเทียบเส้นทางไปมหาวิทยาลัยสงขลานครินทร์ วิทยาเขตภูเก็ต" />
+  <title>ไป ม.อ. ภูเก็ต | PSU Route Finder</title>
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="preconnect" href="https://tile.openstreetmap.org" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="ไปหน้าแรก">
+      <span class="brand-mark">PSU</span>
+      <span class="brand-copy"><strong>PSU ROUTE FINDER</strong><small>เดินทางไป ม.อ. ภูเก็ต</small></span>
+    </a>
+    <a class="top-link" href="#how-to">วิธีใช้งาน <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR JOURNEY TO PSU PHUKET</div>
+        <h1>ไปมหาลัย<br /><span>ให้ถึงไว ในเส้นทางที่ใช่</span></h1>
+        <p>ค้นหาเส้นทางจากจุดเริ่มต้นของคุณ เปรียบเทียบระยะทางและเวลา แล้วเลือกเส้นทางที่เหมาะกับการเดินทางไป ม.อ. ภูเก็ต</p>
+        <a class="hero-cta" href="#route-planner">วางแผนการเดินทาง <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-photo" role="img" aria-label="ภาพอาคารสำนักงานอธิการบดี มหาวิทยาลัยสงขลานครินทร์ วิทยาเขตภูเก็ต">
+        <div class="photo-caption"><span>DESTINATION</span><strong>Prince of Songkla University</strong><small>Phuket Campus · Kathu, Phuket</small></div>
+      </div>
+      <div class="hero-decoration" aria-hidden="true">PKT</div>
+    </section>
+
+    <section class="planner-section" id="route-planner">
+      <div class="section-heading">
+        <div><div class="eyebrow dark-eyebrow">PLAN YOUR ROUTE</div><h2>เริ่มต้นการเดินทาง</h2></div>
+        <span class="fixed-destination"><span class="pin-dot"></span> ปลายทาง: ม.อ. ภูเก็ต</span>
+      </div>
+
+      <div class="planner-grid">
+        <aside class="search-panel">
+          <div class="panel-title"><span class="panel-icon">⌖</span><div><h3>ค้นหาเส้นทาง</h3><p>ระบุตำแหน่งที่คุณต้องการออกเดินทาง</p></div></div>
+          <form id="routeForm" autocomplete="off">
+            <div class="field-group">
+              <label for="startPoint">จุดเริ่มต้นของคุณ</label>
+              <div class="input-wrap">
+                <span class="input-symbol start-symbol">A</span>
+                <input id="startPoint" type="text" placeholder="เช่น เซ็นทรัล ภูเก็ต, ป่าตอง" required />
+                <button class="location-button" type="button" id="useLocation" title="ใช้ตำแหน่งปัจจุบัน" aria-label="ใช้ตำแหน่งปัจจุบัน">◎</button>
+              </div>
+              <div class="suggestions" id="suggestions" role="listbox" aria-label="สถานที่แนะนำ" hidden></div>
+              <p class="field-help">พิมพ์ชื่อสถานที่หรือกดปุ่ม ◎ เพื่อใช้ GPS</p>
+            </div>
+
+            <div class="route-connector"><span></span><i></i><span></span></div>
+
+            <div class="field-group destination-group">
+              <label for="destination">จุดหมายปลายทาง</label>
+              <div class="input-wrap destination-input">
+                <span class="input-symbol end-symbol">B</span>
+                <input id="destination" type="text" value="มหาวิทยาลัยสงขลานครินทร์ วิทยาเขตภูเก็ต" readonly />
+                <span class="lock-icon" title="กำหนดปลายทางไว้แล้ว">✓</span>
+              </div>
+              <p class="field-help">80 หมู่ 1 ถนนวิชิตสงคราม อำเภอกะทู้ จังหวัดภูเก็ต</p>
+            </div>
+
+            <div class="field-group preference-group">
+              <label for="preference">ต้องการเส้นทางแบบใด?</label>
+              <select id="preference">
+                <option value="shortest">ระยะทางสั้นที่สุด</option>
+                <option value="fastest">ใช้เวลาเดินทางน้อยที่สุด</option>
+              </select>
+            </div>
+            <button class="search-button" id="searchButton" type="submit"><span>ค้นหาเส้นทางที่ดีที่สุด</span><b aria-hidden="true">→</b></button>
+            <div class="status-message" id="statusMessage" role="status" aria-live="polite"></div>
+          </form>
+          <div class="panel-footnote"><span>ⓘ</span> ระบบคำนวณเส้นทางรถยนต์จากข้อมูลแผนที่ เวลาเป็นค่าประมาณและอาจไม่รวมสภาพจราจรจริง</div>
+        </aside>
+
+        <section class="map-panel" aria-label="แผนที่เส้นทาง">
+          <div class="map-topline"><div><span class="live-dot"></span><strong>แผนที่การเดินทาง</strong></div><span class="map-provider">OPEN STREET MAP</span></div>
+          <div id="map"></div>
+          <div class="map-legend"><span><i class="legend-line recommended"></i> เส้นทางที่เลือก</span><span><i class="legend-line alternative"></i> เส้นทางอื่น</span></div>
+        </section>
+      </div>
+
+      <section class="results-section" id="resultsSection" hidden>
+        <div class="results-heading"><div><div class="eyebrow dark-eyebrow">ROUTE COMPARISON</div><h2>ผลการค้นหาเส้นทาง</h2></div><span class="result-count" id="resultCount">พบ 0 เส้นทาง</span></div>
+        <div class="route-summary" id="routeSummary"></div>
+        <div class="route-list" id="routeList"></div>
+        <div class="external-map-row"><p>ต้องการเริ่มนำทางจริง? เปิดเส้นทางที่เลือกใน Google Maps ได้เลย</p><a id="googleMapsLink" class="google-map-button" href="#" target="_blank" rel="noopener noreferrer">เปิดใน Google Maps <span>↗</span></a></div>
+      </section>
+    </section>
+
+    <section class="how-section" id="how-to">
+      <div class="how-intro"><div class="eyebrow dark-eyebrow">HOW IT WORKS</div><h2>ใช้งานง่าย<br />แค่ 3 ขั้นตอน</h2><p>ไม่ต้องเดาเส้นทางเอง ให้ระบบช่วยเปรียบเทียบตัวเลือกก่อนออกเดินทาง</p></div>
+      <div class="how-steps">
+        <article class="step-card"><span class="step-number">01</span><div class="step-icon">⌖</div><h3>ระบุจุดเริ่มต้น</h3><p>ค้นหาสถานที่ที่คุณอยู่ หรือใช้ตำแหน่ง GPS ของอุปกรณ์</p></article>
+        <article class="step-card"><span class="step-number">02</span><div class="step-icon">⇄</div><h3>เลือกความต้องการ</h3><p>เลือกได้ว่าจะเน้นระยะทางสั้นที่สุด หรือใช้เวลาเดินทางน้อยที่สุด</p></article>
+        <article class="step-card"><span class="step-number">03</span><div class="step-icon">➜</div><h3>ดูเส้นทางและเดินทาง</h3><p>เปรียบเทียบผลลัพธ์บนแผนที่ แล้วเปิด Google Maps เพื่อนำทางต่อ</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="footer-brand"><span class="brand-mark">PSU</span><strong>PSU ROUTE FINDER</strong></div><p>เว็บไซต์ช่วยวางแผนการเดินทางไปมหาวิทยาลัยสงขลานครินทร์ วิทยาเขตภูเก็ต</p><small>แผนที่ © OpenStreetMap · ค้นหาสถานที่โดย Photon · คำนวณเส้นทางโดย OSRM</small></footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>
